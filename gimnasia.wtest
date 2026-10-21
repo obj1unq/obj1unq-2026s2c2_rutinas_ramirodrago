@@ -1,15 +1,60 @@
 import gimnasia.*
 
 describe "rutinas" {
+	const correrEnLaPlaya  =  new Running()
+	const remarEnElDelta =  new Remo()
+	const remarEnCaminoRemeros = new RemoCompeticion()
+	const maratonBA =  new Maraton()
+		method initialize(){
+			correrEnLaPlaya.intensidad(1.2)
+			maratonBA.intensidad(1.5)
+		}
+		test "correrEnLaPlaya"{
+	 		assert.equals(360, correrEnLaPlaya.caloriasConsumidas(5))
+	 		assert.equals(10200, correrEnLaPlaya.caloriasConsumidas(90))
+		}
+		test"maratonBA"{
+	 		assert.equals(900, maratonBA.caloriasConsumidas(5))
+	 		 assert.equals(25500, maratonBA.caloriasConsumidas(90))			
+		}
+		test "remarEnElDelta"{
+			assert.equals(520, remarEnElDelta.caloriasConsumidas(5))
+			assert.equals(9360, remarEnElDelta.caloriasConsumidas(90))
+		}
+		test "remarEnCaminoRemeros"{
+			assert.equals(510, remarEnCaminoRemeros.caloriasConsumidas(5))
+			 assert.equals(12750, remarEnCaminoRemeros.caloriasConsumidas(90))
+		}
 
-//Punto 1: rutinas
-//	const correrEnLaPlaya = // Una actividad de running con intensisdad 1.2
-//	const remarEnElDelta = // Una actividad de remo
-//	const remarEnCaminoRemeros = // Una actividad de remo comptetitivo
-//	const maratonBA = //Una maraton con intensidad 1.5
+
 
 //Punto 2: personas
-	//const calamardo = //Una persona Sedentaria con peso 60 y tiempo de ejercicio 5
+	const calamardo =  new PersonaSedentaria ()
+	const bob= new PersonaAtleta()
+		test"rutinas de calamardo"{
+			calamardo.peso(60)
+			calamardo.tiempoDeLaPersona(5)
+			calamardo.hacerRutina(correrEnLaPlaya)
+			assert.equals(59.948, calamardo.peso().truncate(3))
+			calamardo.hacerRutina(maratonBA)
+			assert.equals(59.871, calamardo.peso().truncate(3))
+			calamardo.hacerRutina(remarEnElDelta)
+			assert.equals(59.925, calamardo.peso().truncate(3))
+			calamardo.hacerRutina(remarEnCaminoRemeros)
+			assert.equals(59.927, calamardo.peso().truncate(3))
+		}
+		test "rutinas de bob"{
+			bob.peso(40)
+			bob.hacerRutina(correrEnLaPlaya)
+			assert.equals(39.725, bob.peso().truncate(3))
+			// bob.agregarRutina(maratonBA, 90)
+			// assert.equals(37.821, bob.pesoPerdido().truncate(3))
+			// bob.agregarRutina(remarEnElDelta, 90)
+			// assert.throwsExceptionWithMessage("la rutina no consume las colorias necesarias",bob.hacerRutina())
+			// bob.agregarRutina(remarEnCaminoRemeros, 90)
+			// assert.equals(39.406, bob.pesoPerdido().truncate(3))
+		}	
+		//Una persona Sedentaria con peso 60 y tiempo de ejercicio 5
  	//const bob =  // Una persona atleta con peso 40 
 
 //Punto 3: clubes

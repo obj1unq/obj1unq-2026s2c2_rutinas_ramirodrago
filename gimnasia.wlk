@@ -1,77 +1,82 @@
 class Rutinas{
-    var property intensidad
-    var property tiempo
-        method caloriasConsumidas(){
-            return 100 * (tiempo - self.tiempoDeDescanso()) * intensidad
+    var property intensidad  = 0
+        method caloriasConsumidas(tiempo){
+            return 100 * (tiempo - self.tiempoDeDescanso(tiempo)) * intensidad
         }
-        method tiempoDeDescanso()        
+        method tiempoDeDescanso(tiempo)       
 }
 class Running inherits Rutinas{
-        override method tiempoDeDescanso(){
+        override method tiempoDeDescanso(tiempo){
             return if(tiempo > 20 ) { 5 } else {2}
      }
 }
 class Maraton inherits Running{
-        override method caloriasConsumidas(){
-            return super() * 2
+        override method caloriasConsumidas(tiempo){
+            return super(tiempo) * 2
         }
 }
 class Remo inherits Rutinas{
     const intensidadDelRemo = 1.3
-        override method caloriasConsumidas(){
-            return 100 * (tiempo - self.tiempoDeDescanso()) * intensidadDelRemo
+        override method caloriasConsumidas(tiempo){
+            return 100 * (tiempo - self.tiempoDeDescanso(tiempo)) * intensidadDelRemo
         }
-        override method tiempoDeDescanso(){
+        override method tiempoDeDescanso(tiempo){
             return tiempo / 5
         }
 
 }
 class RemoCompeticion inherits Remo{
     const intensidadDeCompetencia = 1.7
-        override method caloriasConsumidas(){
-            return 100 * (tiempo - self.tiempoDeDescanso()) * intensidadDeCompetencia
+        override method caloriasConsumidas(tiempo){
+            return 100 * (tiempo - self.tiempoDeDescanso(tiempo)) * intensidadDeCompetencia
         }
-        override method tiempoDeDescanso(){
-            return (tiempo - 3).max(2)
+        override method tiempoDeDescanso(tiempo){
+            return ((tiempo/ 5) - 3).max(2)
         }
 }
 class Persona{
-    var peso 
-    var rutina = null
-        method pesoPerdido(){
-            return rutina.caloriasConsumidas() / self.caloriasPorKilo()
+    var property peso = 0 
+        method pesoPerdido(rutina){
+            return  (rutina.caloriasConsumidas(self.tiempo()) / self.caloriasPorKilo())
         }
-        method hacerRutina(){
-            peso = peso - self.pesoPerdido()
-        }
-        method agregarRutina(_rutina){
-            rutina = _rutina
+        method hacerRutina(rutina){
+            peso = peso - self.pesoPerdido(rutina)
         }
         method caloriasPorKilo()
+        method validarpuedoHacerRutina(rutina)
+        method tiempo()
 }
-class Sedentaria inherits Persona{
+class PersonaSedentaria inherits Persona{
+    var property tiempoDeLaPersona = 0
        override method caloriasPorKilo(){
         return 7000
        }
-       override method hacerRutina(){
-        if (peso >= 50) {super()}
+       method tiempo(){
+        return tiempoDeLaPersona
        }
-       method tiempoQueVoyAEntrenar(_tiempo){
-        rutina.tiempo(_tiempo)
+       override method hacerRutina(rutina){
+        self.validarpuedoHacerRutina(rutina)
+        super(rutina)
+       }
+       override method validarpuedoHacerRutina(rutina){
+            if (peso <= 50){self.error("peso menos de 50 kilos, puedo seguir comiendo")}
        }
 }
-class Atleta inherits Persona {     
-      override method pesoPerdido(){
-        return super() - 1
+class PersonaAtleta inherits Persona {      
+      override method pesoPerdido(rutina){
+        return super(rutina) - 1
       }
       override method caloriasPorKilo(){
         return 8000
       }
-      override method hacerRutina(){
-        if(rutina.caloriasConsumidas() > 10000) {super()}
+      override method hacerRutina(rutina){
+        self.validarpuedoHacerRutina(rutina)
+        super(rutina)
       }
-      override method agregarRutina(_rutina){
-        rutina = _rutina
-        rutina.tiempo(90)
-      }  
+      override method validarpuedoHacerRutina(rutina){
+       if (rutina.caloriasConsumidas(self.tiempo()) <=10000) {self.error("la rutina no consume las colorias necesarias")}
+      }
+       method tiempo(){
+        return 90
+       }  
 }   
